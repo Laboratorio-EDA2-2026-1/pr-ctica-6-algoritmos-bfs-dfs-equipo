@@ -1,45 +1,62 @@
-
-
-
 def main():
-    rows=[0,0,0,0,0,0,0,0]
-    columns=[0,0,0,0,0,0,0,0]
-    tab =[0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-    line = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
-    line2 = [0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+
+    print("Reinas: ")
     n = int(input())
-    dfs(0,n,rows,columns,tab,line,line2)
-def dfs(a,n,rows,columns,tab,line,line2):
-    if a == n:
-        for u in range(0,64):
-                if(u%8 == 0):
-                    print("\n")
-                
-                print(tab[u],end=" ")
-        print("\n")
-        return
+    rows=[0]*n
+    columns=[0]*n
+    tab =[0]*(n*n)
+    auxt = []
+    line = [0]*(2*n)
+    line2 = [0]*(2*n)
+    line = [0]*(2*n)
+    line2 = [0]*(2*n)
+    used = [0]*n
+    print("Posiciones ocupadas:")
+    for i in range(0,n):
+        #se debe ingresar valor por valor, no todos juntos 
+        used[i] = int(input())
+    print("Resultados Posibles: ")
+    dfs(0,n,rows,columns,tab,line,line2,auxt,used)
+    for arr in auxt:
+        print(arr)
+
+def dfs(a,n,rows,columns,tab,line,line2,auxt,used):
     
-    for i in range(0,8):
-        for j in range(0,8):
-            if rows[i] == 0 and columns[j]==0 and line[8-i+j]==0 and line2[8-j+i]==0 and a < n:
-                rows[i]=1
-                columns[j]=1
-                tab[i*8 + j] = 1
-                line[8-i+j]=1
-                line2[8-j+i]=1
-                dfs(a+1,n,rows,columns,tab,line,line2)
-                
-            else:
-                continue
-            rows[i]=0
-            columns[j]=0
-            tab[i*8 +j]=0
-            line[8-i+j]=0
-            line2[8-j+i]=0
+    if a == n:
+        ar = [0]*n
+        for u in range(n*n):
+        #    if u % n == 0 and u > 0:
+        #        print()
+        #    print(tab[u], end=" ")
+           if(tab[u] > 0): ar[u%n]= int((u/n))+1
+        #print("Arreglo: ")
+        #for i in ar:
+        #    print(i,end=" ")
+        #print("\n")
+        auxt.append(ar)
+    
+    i = a
+    for j in range(n):
+        if columns[j] or line[n-1-i+j] or line2[i+j] or used[j]==i+1:
+            continue
+
+        rows[i] = columns[j] = 1
+        line[n-1-i+j] = line2[i+j] = 1
+        tab[i*n + j] = 1
+
+        dfs(a+1, n, rows, columns, tab, line, line2, auxt,used)
+
+        rows[i] = columns[j] = 0
+        line[n-1-i+j] = line2[i+j] = 0
+        tab[i*n + j] = 0
+
+    
+            
             
 
 
 if __name__ == "__main__":
     main()
+
 
 
